@@ -70,7 +70,7 @@ class DNA
   end
 
   def hamming_distance(other_strand)
-    strands = [strand, other_strand].sort_by { |strand| strand.length }
+    strands = [strand, other_strand].sort_by(&:size)
     short, long = strands[0], strands[-1]
 
     distance = 0
