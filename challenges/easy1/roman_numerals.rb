@@ -97,12 +97,15 @@
     # sets up instance variable, that's it.
 
     # method 2: to_roman
-      # take the number and try to convert it to a roman numeral
-      # create empty string
-      # iterate through the constant keys. If the number is greater than the key, add the value to the string.
+      # Take each digit of the input number in an array
+      # convert to a string and add 0's based on the array size and index
+      # array.size - 1 - index * 0
+        # [3, 1, 2, 4]
+        # array_size = 4
+        # index = 0
 
 class RomanNumeral
-  NUMERAL_VALUES = {
+  NUMERALS = {
     '1' => 'I',
     '5' => 'V',
     '10' => 'X',
@@ -118,17 +121,23 @@ class RomanNumeral
 
   def to_roman
     roman_numeral = ''
-    counter = numeral
+    big_digits = get_digits
 
-    NUMERAL_VALUES.keys.reverse.each do |value|
-      if numeral >= value
-        roman_numeral << NUMERAL_VALUES[value]
-        counter -= value
-
-        break if counter == 0
-      end
+    big_digits.each do |digit|
+      next if digit.start_with?('0')
+      roman_numeral << NUMERALS[digit]
     end
+
     roman_numeral
+  end
+
+  def get_digits
+    digits = numeral.digits.reverse.map(&:to_s)
+
+    digits.map.with_index do |digit, index|
+      place = '0' * (digits.size - 1 - index)
+      digit + place
+    end
   end
 
   private
@@ -141,4 +150,13 @@ num = RomanNumeral.new(10)
 p num.to_roman
 
 num2 = RomanNumeral.new(40)
-p num2.to_roman
+# p num2.to_roman
+
+num3 = RomanNumeral.new(100)
+p num3.to_roman
+
+num4 = RomanNumeral.new(1000)
+p num4.to_roman
+
+num5 = RomanNumeral.new(1500)
+p num5.to_roman
