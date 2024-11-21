@@ -137,8 +137,8 @@ class RomanNumeral
     big_digits.each do |digit|
       next if digit == 0
       roman_numeral << NUMERALS[digit] unless NUMERALS[digit] == nil
-      roman_numeral << add_numerals(digit)
-      roman_numeral << subtract_numerals(digit)
+      roman_numeral << add_numerals(digit) if add?(digit)
+      roman_numeral << subtract_numerals(digit) if subtract?(digit)
     end
 
     roman_numeral
@@ -162,12 +162,24 @@ class RomanNumeral
   end
 
   def add?(digit)
-    first_digit == get_first_digit
+    first_digit = get_first_digit(digit)
+    first_digit == 2 || first_digit == 3 || first_digit == 6 ||
+      first_digit == 7 || first_digit == 8
+  end
+
+  def subtract?(digit)
+    first_digit = get_first_digit(digit)
+    first_digit == 4 || first_digit == 9
+  end
+
+  def need_five?(digit)
+    first_digit = get_first_digit(digit)
+    first_digit == 6 || first_digit == 7 || first_digit == 8
   end
 
   def add_numerals(digit)
     first_digit = get_first_digit(digit)
-    if first_digit == 1 || first_digit == 6
+    if first_digit == 6
       multiplier = 1
 
     elsif first_digit == 2 || first_digit == 7
@@ -181,7 +193,23 @@ class RomanNumeral
     end
 
     next_smallest = find_next_smallest_number(digit)
-    NUMERALS[next_smallest] * multiplier
+
+    if need_five?(digit)
+      possible_five = calculate_five_value(next_smallest)
+
+    else
+      possible_five = ''
+    end
+
+    possible_five + (NUMERALS[next_smallest] * multiplier)
+  end
+
+  def calculate_five_value(next_smallest)
+    case next_smallest
+    when (1..9) then 'V'
+    when (10..99) then 'L'
+    when (100..999) then 'D'
+    end
   end
 
   def subtract_numerals(digit)
@@ -209,6 +237,9 @@ class RomanNumeral
 
   attr_reader :numeral
 end
+
+num = RomanNumeral.new(3750) # LXIII
+p num.to_roman
 
 # num = RomanNumeral.new(4)
 
