@@ -172,29 +172,28 @@ class RomanNumeral
     first_digit == 4 || first_digit == 9
   end
 
-  def need_five?(digit)
-    first_digit = get_first_digit(digit)
+  def need_five?(first_digit)
     first_digit == 6 || first_digit == 7 || first_digit == 8
+  end
+  
+  def determine_multiplier(first_digit)
+    if first_digit == 6
+      1
+
+    elsif first_digit == 2 || first_digit == 7
+      2
+
+    elsif first_digit == 3 || first_digit == 8
+      3
+    end
   end
 
   def add_numerals(digit)
     first_digit = get_first_digit(digit)
-    if first_digit == 6
-      multiplier = 1
-
-    elsif first_digit == 2 || first_digit == 7
-      multiplier = 2
-
-    elsif first_digit == 3 || first_digit == 8
-      multiplier = 3
-
-    else
-      return ''
-    end
-
+    multiplier = determine_multiplier(first_digit)
     next_smallest = find_next_smallest_number(digit)
 
-    if need_five?(digit)
+    if need_five?(first_digit)
       possible_five = calculate_five_value(next_smallest)
 
     else
@@ -237,24 +236,3 @@ class RomanNumeral
 
   attr_reader :numeral
 end
-
-num = RomanNumeral.new(3750) # LXIII
-p num.to_roman
-
-# num = RomanNumeral.new(4)
-
-# p num.to_roman # CM
-# p num.add_numerals(200)
-
-# num2 = RomanNumeral.new(2)
-# p num2.to_digits
-# p num2.add_numerals(3000)
-
-# num3 = RomanNumeral.new(3)
-# p num3.to_digits
-
-# num4 = RomanNumeral.new(6)
-# p num4.to_digits
-
-# num5 = RomanNumeral.new(4)
-# # p num5.to_roman
