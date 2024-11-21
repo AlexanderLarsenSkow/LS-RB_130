@@ -117,13 +117,13 @@
 
 class RomanNumeral
   NUMERALS = {
-    1 => 'I',
-    5 => 'V',
-    10 => 'X',
-    50 => 'L',
-    100 => 'C',
+    1000 => 'M',
     500 => 'D',
-    1000 => 'M'
+    100 => 'C',
+    50 => 'L',
+    10 => 'X',
+    5 => 'V',
+    1 => 'I'
   }
 
   def initialize(number)
@@ -142,12 +142,34 @@ class RomanNumeral
     roman_numeral
   end
 
-  def add_numerals
-    
+  def get_first_digit(digit)
+    digit.digits.reverse[0]
   end
 
-  def subtract_numerals
+  def find_next_smallest_number(digit)
+    NUMERALS.each do |integer_val, numeral|
+      return integer_val if digit > integer_val
+    end
+  end
 
+  def add_numerals(digit)
+    first_digit = get_first_digit(digit)
+    if first_digit == 1 || first_digit == 6
+      multiplier = 1
+
+    elsif first_digit == 2 || first_digit == 7
+      multiplier = 2
+
+    elsif first_digit == 3 || first_digit == 8
+      multiplier = 3
+    end
+
+    next_smallest = find_next_smallest_number(digit)
+
+    NUMERALS[next_smallest] * multiplier
+  end
+
+  def subtract_numerals(digit, numeral)
   end
 
   def to_digits
@@ -168,16 +190,17 @@ end
 
 num = RomanNumeral.new(1)
 
-p num.to_digits
+# p num.add_numerals(2)
 
 num2 = RomanNumeral.new(2)
 p num2.to_digits
+p num2.add_numerals(3000)
 
-num3 = RomanNumeral.new(3)
-p num3.to_digits
+# num3 = RomanNumeral.new(3)
+# p num3.to_digits
 
-num4 = RomanNumeral.new(6)
-p num4.to_digits
+# num4 = RomanNumeral.new(6)
+# p num4.to_digits
 
-# num5 = RomanNumeral.new(1500)
-# p num5.to_roman
+# num5 = RomanNumeral.new(4)
+# # p num5.to_roman
