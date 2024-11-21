@@ -136,7 +136,9 @@ class RomanNumeral
 
     big_digits.each do |digit|
       next if digit == 0
-      roman_numeral << NUMERALS[digit]
+      roman_numeral << NUMERALS[digit] unless NUMERALS[digit] == nil
+      roman_numeral << add_numerals(digit)
+      roman_numeral << subtract_numerals(digit)
     end
 
     roman_numeral
@@ -147,9 +149,20 @@ class RomanNumeral
   end
 
   def find_next_smallest_number(digit)
-    NUMERALS.each do |integer_val, numeral|
+    NUMERALS.each do |integer_val, _|
+      next if get_first_digit(integer_val) == 5
       return integer_val if digit > integer_val
     end
+  end
+
+  def find_next_biggest_number(digit)
+    NUMERALS.keys.reverse.each do |integer_val|
+      return integer_val if digit < integer_val
+    end
+  end
+
+  def add?(digit)
+    first_digit == get_first_digit
   end
 
   def add_numerals(digit)
@@ -162,14 +175,23 @@ class RomanNumeral
 
     elsif first_digit == 3 || first_digit == 8
       multiplier = 3
+
+    else
+      return ''
     end
 
     next_smallest = find_next_smallest_number(digit)
-
     NUMERALS[next_smallest] * multiplier
   end
 
-  def subtract_numerals(digit, numeral)
+  def subtract_numerals(digit)
+    first_digit = get_first_digit(digit)
+    return '' unless first_digit == 4 || first_digit == 9
+
+    smaller = find_next_smallest_number(digit)
+    bigger = find_next_biggest_number(digit)
+
+    NUMERALS[smaller] + NUMERALS[bigger]
   end
 
   def to_digits
@@ -188,13 +210,14 @@ class RomanNumeral
   attr_reader :numeral
 end
 
-num = RomanNumeral.new(1)
+# num = RomanNumeral.new(4)
 
-# p num.add_numerals(2)
+# p num.to_roman # CM
+# p num.add_numerals(200)
 
-num2 = RomanNumeral.new(2)
-p num2.to_digits
-p num2.add_numerals(3000)
+# num2 = RomanNumeral.new(2)
+# p num2.to_digits
+# p num2.add_numerals(3000)
 
 # num3 = RomanNumeral.new(3)
 # p num3.to_digits
