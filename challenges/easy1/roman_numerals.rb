@@ -87,6 +87,14 @@
   # Hash constant where Roman numerals point at numbers...
   # - this part from the number and add the part of the numeral to a return string
 
+  # adding
+    # first digit is 1, 2, 3, 6, 7, 8
+
+  # Subtracting
+    # first digit is 4 or 9
+
+  # 1's have a symbol, as do 5's
+
 # Algorithm:
   # Class RomanNumeral
     # 2 methods, 1 constant
@@ -97,7 +105,10 @@
     # sets up instance variable, that's it.
 
     # method 2: to_roman
-      # Take each digit of the input number in an array
+
+
+    # Method 3: to_digits
+      # # Take each digit of the input number in an array
       # convert to a string and add 0's based on the array size and index
       # array.size - 1 - index * 0
         # [3, 1, 2, 4]
@@ -106,13 +117,13 @@
 
 class RomanNumeral
   NUMERALS = {
-    '1' => 'I',
-    '5' => 'V',
-    '10' => 'X',
-    '50' => 'L',
-    '100' => 'C',
-    '500' => 'D',
-    '1000' => 'M'
+    1 => 'I',
+    5 => 'V',
+    10 => 'X',
+    50 => 'L',
+    100 => 'C',
+    500 => 'D',
+    1000 => 'M'
   }
 
   def initialize(number)
@@ -121,23 +132,33 @@ class RomanNumeral
 
   def to_roman
     roman_numeral = ''
-    big_digits = get_digits
+    big_digits = to_digits
 
     big_digits.each do |digit|
-      next if digit.start_with?('0')
+      next if digit == 0
       roman_numeral << NUMERALS[digit]
     end
 
     roman_numeral
   end
 
-  def get_digits
+  def add_numerals
+    
+  end
+
+  def subtract_numerals
+
+  end
+
+  def to_digits
     digits = numeral.digits.reverse.map(&:to_s)
 
-    digits.map.with_index do |digit, index|
-      place = '0' * (digits.size - 1 - index)
-      digit + place
+    big_digits = digits.map.with_index do |digit, index|
+      tens_place = '0' * (digits.size - 1 - index)
+      digit + tens_place
     end
+
+    big_digits.map(&:to_i)
   end
 
   private
@@ -145,18 +166,18 @@ class RomanNumeral
   attr_reader :numeral
 end
 
-num = RomanNumeral.new(10)
+num = RomanNumeral.new(1)
 
-p num.to_roman
+p num.to_digits
 
-num2 = RomanNumeral.new(40)
-# p num2.to_roman
+num2 = RomanNumeral.new(2)
+p num2.to_digits
 
-num3 = RomanNumeral.new(100)
-p num3.to_roman
+num3 = RomanNumeral.new(3)
+p num3.to_digits
 
-num4 = RomanNumeral.new(1000)
-p num4.to_roman
+num4 = RomanNumeral.new(6)
+p num4.to_digits
 
-num5 = RomanNumeral.new(1500)
-p num5.to_roman
+# num5 = RomanNumeral.new(1500)
+# p num5.to_roman
