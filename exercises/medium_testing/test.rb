@@ -1,3 +1,4 @@
+require 'stringio'
 require 'minitest/autorun'
 
 require_relative 'transaction'
@@ -6,7 +7,8 @@ require_relative 'cash_register'
 class TestCashRegister < Minitest::Test
   def test_accept_money
     transaction = Transaction.new(50)
-    transaction.prompt_for_payment
+    input = StringIO.new("50\n")
+    transaction.prompt_for_payment(input: input)
 
     register = CashRegister.new(500)
     register.accept_money(transaction)
@@ -36,4 +38,11 @@ class TestCashRegister < Minitest::Test
     assert_output(test_receipt) {register.give_receipt(transaction)}
   end
 
+  def test_prompt_for_payment
+    transaction = Transaction.new(30)
+    input = StringIO.new("30\n")
+    test = transaction.prompt_for_payment(input: input)
+    assert_output(input.read) { test }
+    assert_equal(30, transaction.amount_paid)
+  end
 end
