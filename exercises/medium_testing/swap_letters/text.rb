@@ -8,19 +8,8 @@ class Text
   def swap(letter_one, letter_two)
     @text.gsub(letter_one, letter_two)
   end
+
+  def word_count
+    @text.split.count
+  end
 end
-
-# txt = Text.new(File.new('sample.txt').read)
-# p txt.text
-
-# txt.swap('a', 'b')
-
-# p txt.text
-# p txt.swap('a', 'e')
-
-
-# p txt.swap('a', 'e')
-# # p txt.text.rewind
-# p abc
-# # .to_s.swap('a', 'e')
-# p abc.swap('a', 'e')
