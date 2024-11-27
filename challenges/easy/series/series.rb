@@ -48,18 +48,18 @@ class Series
 
   def slices(max_length)
     raise ArgumentError if max_length > string_number.size
-    combinations = []
 
-    (0..string_number.size - max_length).each do |index|
+    (0..string_number.size - max_length).map do |index|
       combo = [string_number[index].to_i]
 
-      (index + 1...string_number.size).each do |index2|
-        break if combo.size >= max_length
+      string_number[index + 1, max_length - 1].chars.each do |index2|
         combo << string_number[index2].to_i
       end
-      combinations << combo
+      combo
     end
-
-    combinations
   end
 end
+
+series = Series.new('012345')
+
+p series.slices(2)
