@@ -42,15 +42,19 @@ class Robot
   LETTERS = ('A'..'Z').to_a
   @@used_names = []
 
-  attr_reader :name
-
   def initialize
-    @name = random_name
-    @@used_names << name
+    @name = nil
+  end
+
+  def name
+    @name == nil ? @name = random_name : @name
+    @@used_names << @name if !@@used_names.include? @name
+    @name
   end
 
   def reset
-    initialize
+    @@used_names.delete @name
+    @name = random_name
   end
 
   private
@@ -68,3 +72,6 @@ class Robot
     @@used_names.include?(new_name) ? random_name : new_name
   end
 end
+
+robot = Robot.new
+p robot.name
