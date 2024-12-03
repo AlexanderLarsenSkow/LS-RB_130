@@ -84,30 +84,7 @@
       # iterate through each half of the letters array
       # and add the correct things to each one.
 
-
 class Diamond
-  def self.make_half(letters)
-    half = []
-    outer_space_val = (calculate_inner_space(letters) + 1) / 2
-    inner_space_val = 0
-
-    letters[0..-2].each do |letter|
-      outer_space = ' ' * outer_space_val
-      inner_space = ' ' * inner_space_val
-
-      if letter == 'A'
-        half << (outer_space + letter + outer_space)
-        inner_space_val += 1
-
-      else
-        half << (outer_space + letter + inner_space + letter + outer_space)
-        inner_space_val += 2
-      end
-      outer_space_val -= 1
-    end
-    half
-  end
-
   def self.make_diamond(letter)
     return "A\n" if letter == 'A'
 
@@ -118,9 +95,26 @@ class Diamond
     diamond += make_half(letters)
     diamond << (letters[-1] + (' ' * inner_space) + letters[-1])
     diamond += make_half(letters).reverse
-    diamond[-1] += "\n"
 
-    diamond.join("\n")
+    diamond.join("\n") + "\n"
+  end
+
+   def self.make_half(letters)
+    half = []
+    outer_space_val = (calculate_inner_space(letters) + 1) / 2
+    inner_space_val = 1
+
+    half << ((' ' * outer_space_val) + 'A' + (' ' * outer_space_val))
+
+    letters[1..-2].each do |letter|
+      outer_space_val -= 1
+      outer_space = ' ' * outer_space_val
+      inner_space = ' ' * inner_space_val
+      inner_space_val += 2
+
+      half << (outer_space + letter + inner_space + letter + outer_space)
+    end
+    half
   end
 
   def self.calculate_inner_space(letters)
