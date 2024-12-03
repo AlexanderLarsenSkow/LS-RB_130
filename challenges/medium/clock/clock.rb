@@ -54,13 +54,11 @@
     # divmod could be useful here for minutes.
       # Yep! Take the division and 181.divmod(60) => [3, 1] add 3 hours, add 1 minute
 
-
 class Clock
-  attr_accessor :hours, :minutes
-
   def initialize(hours, minutes)
     @hours = hours
     @minutes = minutes
+    convert
   end
 
   def self.at(hours = 0, minutes = 0)
@@ -68,7 +66,6 @@ class Clock
   end
 
   def to_s
-    convert
     format('%.2d', hours) + ":" + format("%.2d", minutes)
   end
 
@@ -86,34 +83,26 @@ class Clock
     Clock.at(hours, minused_minutes)
   end
 
+  protected
+
+  attr_reader :hours, :minutes
+
+  private
+
+  attr_writer :hours, :minutes
+
   def convert
+    convert_for_negative if (hours * 60) < (-minutes)
+
     conversion = minutes.divmod(60)
     self.hours += conversion[0]
     self.minutes = conversion[1]
 
-    until hours < 24
-      self.hours -= 24
-    end
-
-    convert_for_negative if minutes < 0
-
-    [hours, minutes]
+    self.hours -= 24 until hours < 24
   end
 
   def convert_for_negative
-    self.hours = 23 if hours == 0
-    self.hours -= (minutes / 60)
+    max_minutes = 1440
+    self.minutes += max_minutes until minutes >= 0
   end
 end
-
-clock = Clock.at(0)
-clock2 = clock - 50
-# clock2.convert_for_negative
-puts clock2
-# clock3 = Clock.at(0, -130)
-# clock3.convert_for_negative
-# puts clock
-
-# clock2 = Clock.at(10)
-# puts clock2 - 90
-# puts clock2
