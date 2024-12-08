@@ -60,14 +60,7 @@ class Meetup
 
   TEENTHS = [13, 14, 15, 16, 17, 18, 19]
 
-  DESCRIPTOR_INDICIES = {
-    "first" => 0,
-    "second" => 1,
-    "third" => 2,
-    "fourth" => 3,
-    "fifth" => 4,
-    "last" => -1
-  }
+  ORDINALS = %w(first second third fourth fifth)
 
   attr_reader :year, :month
 
@@ -77,16 +70,13 @@ class Meetup
   end
 
   def day(weekday, descriptor)
-    day = 1
     weekday, descriptor = weekday.capitalize, descriptor.downcase
 
-    weekday_number = find_weekday_number(weekday)
+    weekday_number = WEEKDAYS[weekday]
     possible_days = find_matching_days(weekday_number)
 
     if descriptor == "teenth"
-      possible_days.each do |current_day|
-        day = current_day if TEENTHS.include? current_day
-      end
+      day = possible_days.find { |current_day| TEENTHS.include? current_day }
 
     else
       day = possible_days[get_index(descriptor)]
@@ -99,15 +89,7 @@ class Meetup
   private
 
   def get_index(descriptor)
-    DESCRIPTOR_INDICIES.each do |version, index|
-      return  index if descriptor == version
-    end
-  end
-
-  def find_weekday_number(weekday)
-    WEEKDAYS.each do |day, number|
-      return number if day == weekday
-    end
+    descriptor == 'last' ? -1 : ORDINALS.index(descriptor)
   end
 
   def find_matching_days(weekday_number)
