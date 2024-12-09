@@ -68,6 +68,17 @@ class SimpleLinkedList
     @list = []
   end
 
+  def self.from_a(values)
+    new_list = SimpleLinkedList.new
+    return new_list unless values
+
+    values.reverse.each do |value|
+      new_list.push value
+    end
+
+    new_list
+  end
+
   def push(value)
     next_element = list[0]
     list.unshift Element.new(value, next_element)
@@ -75,6 +86,17 @@ class SimpleLinkedList
 
   def pop
     list.shift.datum
+  end
+
+  def reverse
+    elements = self.to_a
+    reverse_list = SimpleLinkedList.new
+
+    elements.each do |element|
+      reverse_list.push element
+    end
+
+    reverse_list
   end
 
   def to_a
@@ -86,7 +108,7 @@ class SimpleLinkedList
   end
 
   def peek
-    list.first.datum
+    empty? ? nil : head.datum
   end
 
   def size
@@ -99,13 +121,5 @@ class SimpleLinkedList
 
   private
 
-  attr_reader :list
+  attr_accessor :list
 end
-
-list = SimpleLinkedList.new
-
-(1..10).each do |value|
-  list.push(value)
-end
-
-p list.to_a
