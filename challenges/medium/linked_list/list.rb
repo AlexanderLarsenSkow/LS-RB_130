@@ -42,8 +42,8 @@
     # class method from_a(starts a new list that has elements already ready to go.)
 
 class Element
-  def initialize(value1, value2 = nil)
-    @pair = [value1, value2]
+  def initialize(data, next_value = nil)
+    @pair = [data, next_value]
   end
 
   def datum
@@ -51,7 +51,7 @@ class Element
   end
 
   def tail?
-    pair[1] ? false : true
+    !pair[1]
   end
 
   def next
@@ -121,5 +121,5 @@ class SimpleLinkedList
 
   private
 
-  attr_accessor :list
+  attr_reader :list
 end
