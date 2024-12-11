@@ -62,30 +62,28 @@
     # union, add every element that is not present in the calling object.
 
 class CustomSet
-  attr_reader :set
-
-  def initialize(set = nil)
-    set ? @set = set.uniq : @set = []
+  def initialize(set = [])
+    @elements = set.uniq
   end
 
   def empty?
-    set.empty?
+    elements.empty?
   end
 
   def size
-    set.size
+    elements.size
   end
 
   def contains?(element)
-    set.include? element
+    elements.include? element
   end
 
   def subset?(other_set)
-    set.all? { |element| other_set.contains? element }
+    elements.all? { |element| other_set.contains? element }
   end
 
   def disjoint?(other_set)
-    !set.any? { |element| other_set.contains? element }
+    elements.none? { |element| other_set.contains? element }
   end
 
   def eql?(other_set)
@@ -95,37 +93,35 @@ class CustomSet
   alias_method :==, :eql?
 
   def add(element)
-    set << element unless self.contains? element
+    elements << element unless self.contains? element
     self
   end
 
   def intersection(other_set)
-    set.select! { |element| other_set.contains? element }
-    self
+    intersect = elements.select { |element| other_set.contains? element }
+    CustomSet.new(intersect)
   end
 
   def difference(other_set)
-    set.reject! { |element| other_set.contains? element }
-    self
+    difference = elements.reject { |element| other_set.contains? element }
+    CustomSet.new(difference)
   end
 
   def union(other_set)
-    other_set.each { |element| add(element) }
-    self
+    union_set = CustomSet.new(elements)
+    other_set.each { |element| union_set.add(element) }
+    union_set
   end
 
   def each
-    set.each do |element|
+    elements.each do |element|
       yield(element) if block_given?
     end
 
     self
   end
 
+  private
+
+  attr_reader :elements
 end
-
-set = CustomSet.new([1, 2, 3, 4])
-set2 = CustomSet.new([1, 2])
-set.intersection(set2)
-p set.set
-
