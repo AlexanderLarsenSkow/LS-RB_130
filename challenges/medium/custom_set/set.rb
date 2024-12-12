@@ -62,6 +62,8 @@
     # union, add every element that is not present in the calling object.
 
 class CustomSet
+  OTHER_CONTAINS = proc { |other, element| other.contains? element }
+
   def initialize(set = [])
     @elements = set.uniq
   end
@@ -79,11 +81,11 @@ class CustomSet
   end
 
   def subset?(other_set)
-    elements.all? { |element| other_set.contains? element }
+    elements.all? { |element| OTHER_CONTAINS.call(other_set, element) }
   end
 
   def disjoint?(other_set)
-    elements.none? { |element| other_set.contains? element }
+    elements.none? { |element| OTHER_CONTAINS.call(other_set, element) }
   end
 
   def eql?(other_set)
@@ -98,12 +100,12 @@ class CustomSet
   end
 
   def intersection(other_set)
-    intersect = elements.select { |element| other_set.contains? element }
+    intersect = elements.select { |element| OTHER_CONTAINS.call(other_set, element) }
     CustomSet.new(intersect)
   end
 
   def difference(other_set)
-    difference = elements.reject { |element| other_set.contains? element }
+    difference = elements.reject { |element| OTHER_CONTAINS.call(other_set, element) }
     CustomSet.new(difference)
   end
 
